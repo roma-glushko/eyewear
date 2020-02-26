@@ -1,0 +1,19 @@
+{
+    "name": "roma-glushko/eyewear",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Glushko",
+            "email": "roman.glushko.m@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "^4.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "Eyewear\\": "src/Eyewear"
+        }
+    }
+}

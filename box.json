@@ -1,0 +1,19 @@
+{
+  "directories": ["src"],
+  "finder": [
+    {
+      "name": "*.php",
+      "exclude": [
+        "phpsec",
+        "Tester",
+        "Tests",
+        "tests"
+      ],
+      "in": "vendor"
+    }
+  ],
+  "chmod": "0755",
+  "output": "build/eyewear.phar",
+  "git-commit": "git-commit",
+  "git-version": "git-version"
+}
