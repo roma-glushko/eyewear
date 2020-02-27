@@ -12,8 +12,6 @@
       "in": "vendor"
     }
   ],
-  "chmod": "0755",
   "output": "build/eyewear.phar",
-  "git-commit": "git-commit",
   "git-version": "git-version"
 }

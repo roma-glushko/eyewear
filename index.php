@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 require __DIR__ . '/vendor/autoload.php';
 
+use Eyewear\Command\CollectCommand;
 use Symfony\Component\Console\Application;
-use Eyewear\Command\InspectCommand;
 
-$application = new Application('eyewear', '1.0.0');
+$application = new Application('eyewear', '@git-version@');
 
-$application->add(new InspectCommand());
+$application->add(new CollectCommand());
 
 $application->run();

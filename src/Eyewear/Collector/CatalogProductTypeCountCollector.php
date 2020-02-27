@@ -9,7 +9,7 @@ use PDO;
 /**
  *
  */
-class CatalogProductCollector implements CollectorInterface
+class CatalogProductTypeCountCollector implements CollectorInterface
 {
     /**
      * @param PDO $connection
@@ -18,55 +18,22 @@ class CatalogProductCollector implements CollectorInterface
      */
     public function collect(PDO $connection): array
     {
-        $statusId = $this->getProductStatusId($connection);
+        $productTypeGroups = $connection->query(
+            'SELECT type_id, COUNT(DISTINCT entity_id) as count 
+            FROM catalog_product_entity 
+            GROUP BY type_id'
+        )->fetchAll(PDO::FETCH_ASSOC);
 
-        $allProductCount = $connection->query(
-            'SELECT COUNT(DISTINCT entity_id) FROM catalog_product_entity'
-        )->fetchColumn();
+        $types = [];
 
-        $enabledProductCount = $this->getProductStatsByStatus($connection, $statusId, '1');
-        $disabledProductCount = $this->getProductStatsByStatus($connection, $statusId, '2');
+        foreach ($productTypeGroups as $typeGroup) {
+            $types[$typeGroup['type_id']] = $typeGroup['count'];
+        }
 
         return [
             'catalog-product' => [
-                'all-product-count' => $allProductCount,
-                'enabled-product-count' => $enabledProductCount,
-                'disabled-product-count' => $disabledProductCount,
+                'types' => $types,
             ],
         ];
-    }
-
-    /**
-     * @param PDO $connection
-     *
-     * @return int
-     */
-    private function getProductStatusId(PDO $connection): int
-    {
-        return (int) $connection->query(
-            'SELECT attribute_id FROM eav_attribute WHERE entity_type_id = 4 AND attribute_code = "status"'
-        )->fetchColumn();
-    }
-
-    /**
-     * @param PDO $connection
-     * @param int $statusId
-     * @param string $statusValueId
-     *
-     * @return int
-     */
-    private function getProductStatsByStatus(PDO $connection, int $statusId, string $statusValueId): int
-    {
-        $enabledProductStmt = $connection->prepare(
-            'SELECT COUNT(DISTINCT entity_id) FROM catalog_product_entity
-            LEFT JOIN catalog_product_entity_int ON 
-                catalog_product_entity.row_id = catalog_product_entity_int.row_id AND attribute_id = :status_id
-			WHERE catalog_product_entity_int.value = :status_value_id'
-        );
-        $enabledProductStmt->bindValue('status_id', $statusId);
-        $enabledProductStmt->bindValue('status_value_id', $statusValueId);
-        $enabledProductStmt->execute();
-
-        return (int) $enabledProductStmt->fetchColumn();
     }
 }
