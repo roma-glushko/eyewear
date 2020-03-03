@@ -7,7 +7,9 @@ namespace Eyewear\Command;
 use DateTime;
 use Exception;
 use Eyewear\Collector\CollectorManager;
+use Eyewear\Collector\Schema\SchemaSizeCollector;
 use Eyewear\Database\ConnectionFactory;
+use Eyewear\Report\JsonReport;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -82,7 +84,11 @@ class CollectCommand extends Command
             $databaseMetrics[] = $collector->collect($connection);
         }
 
-        var_dump(array_merge(...$databaseMetrics));
+        $databaseMetrics[] = (new SchemaSizeCollector())->collect($connection, $database);
+
+        $databaseMetricMerged = array_merge(...$databaseMetrics);
+
+        (new JsonReport())->save($databaseMetricMerged);
 
         return 0;
     }

@@ -7,6 +7,7 @@ namespace Eyewear\Collector;
 use Eyewear\Collector\Catalog\ProductCountCollector;
 use Eyewear\Collector\Catalog\ProductTypeCountCollector;
 use Eyewear\Collector\Customer\CustomerGroupCountCollector;
+use Eyewear\Collector\Schema\SchemaSizeCollector;
 use Generator;
 
 /**
