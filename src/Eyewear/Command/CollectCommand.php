@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Eyewear\Command;
 
 use DateTime;
+use Exception;
 use Eyewear\Collector\CollectorManager;
 use Eyewear\Database\ConnectionFactory;
 use Symfony\Component\Console\Command\Command;
@@ -52,6 +53,7 @@ class CollectCommand extends Command
      * @param OutputInterface $output
      *
      * @return int
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

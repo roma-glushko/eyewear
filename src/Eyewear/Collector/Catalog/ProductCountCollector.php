@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Eyewear\Collector;
+namespace Eyewear\Collector\Catalog;
 
+use Eyewear\Collector\CollectorInterface;
 use PDO;
 
 /**
  *
  */
-class CatalogProductCountCollector implements CollectorInterface
+class ProductCountCollector implements CollectorInterface
 {
     /**
      * @param PDO $connection

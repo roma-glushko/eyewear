@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Eyewear\Collector;
+namespace Eyewear\Collector\Catalog;
 
+use Eyewear\Collector\CollectorInterface;
 use PDO;
 
 /**
  *
  */
-class CatalogProductTypeCountCollector implements CollectorInterface
+class ProductTypeCountCollector implements CollectorInterface
 {
     /**
      * @param PDO $connection
@@ -32,7 +33,7 @@ class CatalogProductTypeCountCollector implements CollectorInterface
 
         return [
             'catalog-product' => [
-                'types' => $types,
+                'product-types' => $types,
             ],
         ];
     }

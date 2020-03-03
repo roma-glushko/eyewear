@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Eyewear\Collector;
 
+use Eyewear\Collector\Catalog\ProductCountCollector;
+use Eyewear\Collector\Catalog\ProductTypeCountCollector;
+use Eyewear\Collector\Customer\CustomerGroupCountCollector;
 use Generator;
 
 /**
@@ -22,8 +25,9 @@ class CollectorManager
     public function __construct()
     {
         $this->collectors = [
-            CatalogProductTypeCountCollector::class,
-            CatalogProductTypeCountCollector::class,
+            ProductCountCollector::class,
+            ProductTypeCountCollector::class,
+            CustomerGroupCountCollector::class,
         ];
     }
 

@@ -9,7 +9,8 @@
         }
     ],
     "require": {
-        "symfony/console": "^4.4"
+        "symfony/console": "^4.4",
+        "ext-pdo": "*"
     },
     "autoload": {
         "psr-4": {
