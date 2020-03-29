@@ -18,5 +18,8 @@
         "psr-4": {
             "Eyewear\\": "src/Eyewear"
         }
+    },
+    "require-dev": {
+        "humbug/box": "^3.8"
     }
 }
