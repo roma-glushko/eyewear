@@ -1,12 +1,13 @@
-on:
-  release:
-    types: [created]
-    
 name: Release 
+
+on:
+  push:
+    tags:
+      - '*'
 
 jobs:
   generate:
-    name: Create release-artifacts
+    name: Create Artifacts
     
     runs-on: ubuntu-latest
 
