@@ -7,7 +7,8 @@
         "phpsec",
         "Tester",
         "Tests",
-        "tests"
+        "tests",
+        "humbug"
       ],
       "in": "vendor"
     }
