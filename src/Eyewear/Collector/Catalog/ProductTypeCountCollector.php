@@ -28,11 +28,11 @@ class ProductTypeCountCollector implements CollectorInterface
         $types = [];
 
         foreach ($productTypeGroups as $typeGroup) {
-            $types[$typeGroup['type_id']] = $typeGroup['count'];
+            $types[$typeGroup['type_id']] = (int) $typeGroup['count'];
         }
 
         return [
-            'catalog-product' => [
+            'catalog-products' => [
                 'product-types' => $types,
             ],
         ];

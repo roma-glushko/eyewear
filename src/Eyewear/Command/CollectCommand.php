@@ -86,7 +86,7 @@ class CollectCommand extends Command
 
         $databaseMetrics[] = (new SchemaSizeCollector())->collect($connection, $database);
 
-        $databaseMetricMerged = array_merge(...$databaseMetrics);
+        $databaseMetricMerged = array_merge_recursive(...$databaseMetrics);
 
         (new JsonReport())->save($databaseMetricMerged);
 

@@ -29,8 +29,8 @@ class ProductCountCollector implements CollectorInterface
         $disabledProductCount = $this->getProductStatsByStatus($connection, $statusId, '2');
 
         return [
-            'catalog-product' => [
-                'all-product-count' => $allProductCount,
+            'catalog-products' => [
+                'all-product-count' => (int) $allProductCount,
                 'enabled-product-count' => $enabledProductCount,
                 'disabled-product-count' => $disabledProductCount,
             ],

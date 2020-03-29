@@ -20,19 +20,20 @@ class CustomerGroupCountCollector implements CollectorInterface
     public function collect(PDO $connection): array
     {
         $customerGroupCounts = $connection->query(
-            'SELECT group_id, COUNT(DISTINCT entity_id) as count 
+            'SELECT customer_group_code as group_code, COUNT(DISTINCT entity_id) as count 
             FROM customer_entity 
+            LEFT JOIN customer_group ON customer_group.customer_group_id=customer_entity.group_id
             GROUP BY group_id'
         )->fetchAll(PDO::FETCH_ASSOC);
 
         $types = [];
 
         foreach ($customerGroupCounts as $customerGroupCount) {
-            $types[$customerGroupCount['group_id']] = $customerGroupCount['count'];
+            $types[$customerGroupCount['group_code']] = (int) $customerGroupCount['count'];
         }
 
         return [
-            'customer' => [
+            'customers' => [
                 'customers-in-groups' => $types,
             ],
         ];
