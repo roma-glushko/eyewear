@@ -1,0 +1,31 @@
+on:
+  release:
+    types: [created]
+    
+name: Release 
+
+jobs:
+  generate:
+    name: Create release-artifacts
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@master
+
+      - name: Validate composer.json && composer.lock
+        run: composer validate
+        
+      - name: Install Dependencies
+        run: composer install --prefer-dist --no-progress --no-suggest
+    
+      - name: Generate the Artifact
+        run: ./vendor/bin/box compile
+
+      - name: Upload the artifacts
+        uses: skx/github-action-publish-binaries@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: './bin/*.phar'
