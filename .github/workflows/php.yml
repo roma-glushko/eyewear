@@ -19,9 +19,6 @@ jobs:
 
     - name: Install dependencies
       run: composer install --prefer-dist --no-progress --no-suggest
-
-    - name: Install Box
-      run: composer global require humbug/box
     
     - name: Box Compile
-      run: box compile
+      run: ./vendor/bin/box compile
