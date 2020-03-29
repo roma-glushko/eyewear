@@ -1,5 +1,6 @@
 {
     "name": "roma-glushko/eyewear",
+    "description": "A CLI for measuring Magento2 database growth",
     "type": "project",
     "license": "MIT",
     "authors": [
