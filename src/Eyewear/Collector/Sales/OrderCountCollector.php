@@ -31,11 +31,16 @@ class OrderCountCollector implements CollectorInterface
             'SELECT COUNT(*) FROM sales_order WHERE customer_id IS NOT NULL'
         )->fetchColumn();
 
+        $maxOrderCountPerCustomers = $connection->query(
+            'SELECT MAX(count) FROM (SELECT COUNT(*) as count FROM sales_order GROUP BY customer_email) orders'
+        )->fetchColumn();
+
         return [
             'orders' => [
                 'all-order-count' => (int) $allOrderCount,
-                'all-guest-order-count' => (int) $guestOrderCount,
-                'all-customer-order-count' => (int) $customerOrderCount,
+                'count-by-guests' => (int) $guestOrderCount,
+                'count-by-customers' => (int) $customerOrderCount,
+                'max-count-by-customer' => (int) $maxOrderCountPerCustomers,
             ],
         ];
     }
