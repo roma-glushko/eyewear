@@ -10,6 +10,7 @@ use Eyewear\Collector\CollectorManager;
 use Eyewear\Collector\Schema\SchemaSizeCollector;
 use Eyewear\Database\ConnectionFactory;
 use Eyewear\Report\JsonReport;
+use PDOException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -67,13 +68,19 @@ class CollectCommand extends Command
 
         $output->writeln(sprintf('🛠 Connecting to the database %s', $database));
 
-        $connection = ConnectionFactory::create(
-            $user,
-            $password,
-            $database,
-            $host,
-            $port
-        );
+        try {
+            $connection = ConnectionFactory::create(
+                $user,
+                $password,
+                $database,
+                $host,
+                $port
+            );
+        } catch(PDOException $ex){
+            $output->writeln(sprintf('🛠 Cannot connect to the database: %s', $ex->getMessage()));
+
+            return 1;
+        }
 
         $output->writeln('🛠 Collecting database metrics');
 
