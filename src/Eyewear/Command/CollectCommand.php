@@ -6,9 +6,11 @@ namespace Eyewear\Command;
 
 use DateTime;
 use Exception;
+use Eyewear\Collector\CollectorInterface;
 use Eyewear\Collector\CollectorManager;
 use Eyewear\Collector\Schema\SchemaSizeCollector;
 use Eyewear\Database\ConnectionFactory;
+use Eyewear\Magento\Edition\EditionFactory;
 use Eyewear\Report\JsonReport;
 use PDOException;
 use Symfony\Component\Console\Command\Command;
@@ -26,11 +28,17 @@ class CollectCommand extends Command
      */
     private $collectorManager;
 
+    /**
+     * @var EditionFactory
+     */
+    private $editionFactory;
+
     public function __construct(string $name = null)
     {
         parent::__construct($name);
 
         $this->collectorManager = new CollectorManager();
+        $this->editionFactory = new EditionFactory();
     }
 
     /**
@@ -65,6 +73,11 @@ class CollectCommand extends Command
         $database = $input->getOption('database');
         $host = $input->getOption('host');
         $port = $input->getOption('port');
+        $editionCode = $input->getOption('edition');
+
+        $this->collectorManager->setEdition(
+            $this->editionFactory->create($editionCode)
+        );
 
         $output->writeln(sprintf('🛠 Connecting to the database %s', $database));
 
@@ -91,6 +104,7 @@ class CollectCommand extends Command
             ]
         ];
 
+        /** @var CollectorInterface $collector */
         foreach ($this->collectorManager->getCollectors() as $collector) {
             $databaseMetrics[] = $collector->collect($connection);
         }

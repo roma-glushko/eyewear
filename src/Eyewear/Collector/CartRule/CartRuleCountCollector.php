@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Eyewear\Collector\CartRule;
 
 use Eyewear\Collector\CollectorInterface;
+use Eyewear\Magento\Edition\EditionInterface;
 use PDO;
 
 /**

@@ -18,6 +18,8 @@ use Eyewear\Collector\Eav\AttributeEntityCountCollector;
 use Eyewear\Collector\Eav\AttributeSetCountCollector;
 use Eyewear\Collector\Sales\OrderByStateCountCollector;
 use Eyewear\Collector\Sales\OrderCountCollector;
+use Eyewear\Magento\Edition\EditionAwareInterface;
+use Eyewear\Magento\Edition\EditionInterface;
 use Generator;
 
 /**
@@ -31,7 +33,11 @@ class CollectorManager
     private $collectors;
 
     /**
-     * CollectorManager constructor.
+     * @var EditionInterface
+     */
+    private $edition;
+
+    /**
      */
     public function __construct()
     {
@@ -64,7 +70,29 @@ class CollectorManager
     public function getCollectors(): Generator
     {
         foreach ($this->collectors as $collectorClass) {
-            yield (new $collectorClass);
+            $collector = new $collectorClass;
+
+            if ($collector instanceof EditionAwareInterface) {
+                $collector->setEdition($this->edition);
+            }
+
+            yield $collector;
         }
+    }
+
+    /**
+     * @return EditionInterface
+     */
+    public function getEdition(): EditionInterface
+    {
+        return $this->edition;
+    }
+
+    /**
+     * @param EditionInterface $edition
+     */
+    public function setEdition(EditionInterface $edition): void
+    {
+        $this->edition = $edition;
     }
 }

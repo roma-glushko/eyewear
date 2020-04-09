@@ -5,13 +5,17 @@ declare(strict_types=1);
 namespace Eyewear\Collector\Catalog;
 
 use Eyewear\Collector\CollectorInterface;
+use Eyewear\Magento\Edition\EditionAwareInterface;
+use Eyewear\Magento\Edition\EditionTrait;
 use PDO;
 
 /**
  *
  */
-class ProductCountCollector implements CollectorInterface
+class ProductCountCollector implements CollectorInterface, EditionAwareInterface
 {
+    use EditionTrait;
+
     /**
      * @param PDO $connection
      *
@@ -56,18 +60,25 @@ class ProductCountCollector implements CollectorInterface
      *
      * @return int
      */
-    private function getProductStatsByStatus(PDO $connection, int $statusId, string $statusValueId): int
-    {
-        $enabledProductStmt = $connection->prepare(
+    private function getProductStatsByStatus(
+        PDO $connection,
+        int $statusId,
+        string $statusValueId
+    ): int {
+        $edition = $this->getEdition();
+
+        $productStmt = $connection->prepare(
             'SELECT COUNT(DISTINCT entity_id) FROM catalog_product_entity
             LEFT JOIN catalog_product_entity_int ON 
-                catalog_product_entity.row_id = catalog_product_entity_int.row_id AND attribute_id = :status_id
+                catalog_product_entity.:link_field = catalog_product_entity_int.:link_field AND attribute_id = :status_id
 			WHERE catalog_product_entity_int.value = :status_value_id'
         );
-        $enabledProductStmt->bindValue('status_id', $statusId);
-        $enabledProductStmt->bindValue('status_value_id', $statusValueId);
-        $enabledProductStmt->execute();
 
-        return (int) $enabledProductStmt->fetchColumn();
+        $productStmt->bindValue('status_id', $statusId);
+        $productStmt->bindValue('status_value_id', $statusValueId);
+        $productStmt->bindValue('link_field', $edition->getLinkField());
+        $productStmt->execute();
+
+        return (int) $productStmt->fetchColumn();
     }
 }

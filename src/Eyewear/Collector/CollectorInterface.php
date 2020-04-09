@@ -11,5 +11,10 @@ use PDO;
  */
 interface CollectorInterface
 {
+    /**
+     * @param PDO $connection
+     *
+     * @return array
+     */
     public function collect(PDO $connection): array;
 }
