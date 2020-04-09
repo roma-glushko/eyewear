@@ -19,7 +19,7 @@ class JsonReport
         $timestamp = (new \DateTime())->getTimestamp();
 
         file_put_contents(
-            sprintf('eyewaer-db-report.%s.json', $timestamp),
+            sprintf('eyewear-db-report.%s.json', $timestamp),
             json_encode($metrics, JSON_PRETTY_PRINT)
         );
     }
