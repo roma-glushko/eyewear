@@ -12,5 +12,5 @@ curl -L https://github.com/roma-glushko/eyewear/releases/download/0.1.0/eyewear-
 
 ```bash
 chmod +x eyewear.phar
-collect -u r00t -d magento2 -p 11111 -e ce
+php eyewear.phar collect -u r00t -d magento2 -p 11111 -e ce
 ```
