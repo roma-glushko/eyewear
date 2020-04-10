@@ -17,11 +17,11 @@ class EditionFactory
      * @return EditionInterface
      */
     public function create(string $edition): EditionInterface {
-        if ($edition === 'ce') {
+        if ('ce' === $edition) {
             return new OpenSourceEdition();
         }
 
-        if ($edition === 'ee') {
+        if ('ee' === $edition) {
             return new CommerceEdition();
         }
 

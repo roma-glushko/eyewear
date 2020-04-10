@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace Eyewear\Report;
 
+use Exception;
+
 /**
  *
  */
 class JsonReport
 {
     /**
+     * @param string $filePath
      * @param array $metrics
      *
-     * @throws \Exception
+     * @throws Exception
      */
-    public function save(array $metrics): void
+    public function save(string $filePath, array $metrics): void
     {
-        $timestamp = (new \DateTime())->getTimestamp();
-
         file_put_contents(
-            sprintf('eyewear-db-report.%s.json', $timestamp),
+            $filePath,
             json_encode($metrics, JSON_PRETTY_PRINT)
         );
     }

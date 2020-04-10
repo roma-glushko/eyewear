@@ -30,7 +30,7 @@ class SchemaSizeCollector
             ORDER BY (data_length + index_length) DESC'
         );
         $schemaSizeStatement->execute([
-            ":database" => $databaseName
+            ':database' => $databaseName
         ]);
 
         $schemaSizes = $schemaSizeStatement->fetchAll(PDO::FETCH_ASSOC);

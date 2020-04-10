@@ -68,6 +68,8 @@ class CollectCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $output->writeln('Eyewear 👓 is running:');
+
         $user = $input->getOption('user');
         $password = $input->getOption('password');
         $database = $input->getOption('database');
@@ -79,7 +81,7 @@ class CollectCommand extends Command
             $this->editionFactory->create($editionCode)
         );
 
-        $output->writeln(sprintf('🛠 Connecting to the database %s', $database));
+        $output->writeln(sprintf('• Connecting to the database %s (%s)..', $database, strtoupper($editionCode)));
 
         try {
             $connection = ConnectionFactory::create(
@@ -90,12 +92,12 @@ class CollectCommand extends Command
                 $port
             );
         } catch(PDOException $ex){
-            $output->writeln(sprintf('🛠 Cannot connect to the database: %s', $ex->getMessage()));
+            $output->writeln(sprintf('✘ Cannot connect to the database: %s', $ex->getMessage()));
 
             return 1;
         }
 
-        $output->writeln('🛠 Collecting database metrics');
+        $output->writeln('• Collecting database metrics..');
 
         $databaseMetrics = [
             [
@@ -106,16 +108,29 @@ class CollectCommand extends Command
 
         /** @var CollectorInterface $collector */
         foreach ($this->collectorManager->getCollectors() as $collector) {
-            $databaseMetrics[] = $collector->collect($connection);
+            $metrics = $collector->collect($connection);
+
+            $output->writeln(
+                sprintf('• Collector %s: %s', get_class($collector), json_encode($metrics)),
+                OutputInterface::VERBOSITY_DEBUG
+            );
+
+            $databaseMetrics[] = $metrics;
         }
 
-        $databaseMetrics[] = (new SchemaSizeCollector())->collect($connection, $database);
+        $schemaSizeMetrics = (new SchemaSizeCollector())->collect($connection, $database);
+        $output->writeln(
+            sprintf('• Collector Eyewear\Collector\Schema\SchemaSizeCollector: %s', json_encode($schemaSizeMetrics)),
+            OutputInterface::VERBOSITY_DEBUG
+        );
+        $databaseMetrics[] = $schemaSizeMetrics;
 
         $databaseMetricMerged = array_merge_recursive(...$databaseMetrics);
 
-        $output->writeln('📈 Generating a report..');
+        $reportPath = sprintf('eyewear-db-report.%s.json', (new DateTime())->getTimestamp());
 
-        (new JsonReport())->save($databaseMetricMerged);
+        $output->writeln(sprintf('• Generating a report in %s..', $reportPath));
+        (new JsonReport())->save($reportPath, $databaseMetricMerged);
 
         return 0;
     }
